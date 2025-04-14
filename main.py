@@ -2562,8 +2562,7 @@ with tabs[6]:
     st.markdown("</div>", unsafe_allow_html=True)
 # Onglet 8: Analyse complète du CSV
 with tabs[7]:
-
-
+    
     st.markdown("""
     <div class="chart-container">
         <h3 style="text-align: center; margin-top: 0;">Dérivation de nouvelles colonnes</h3>
@@ -2756,6 +2755,335 @@ with tabs[7]:
         except Exception as e:
             st.error(f"Erreur lors de la création de la métrique: {e}")
 
+    st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown("""
+        <h2 style="text-align: center; margin-bottom: 30px;">ANALYSE COMPLÈTE DU DATASET</h2>
+        """, unsafe_allow_html=True)
+    
+    # Informations générales sur le dataset
+    st.markdown("""
+    <div class="chart-container">
+        <h3 style="text-align: center; margin-top: 0;">Informations générales sur le dataset</h3>
+    """, unsafe_allow_html=True)
+    
+    # Afficher les dimensions du dataset
+    st.markdown(f"""
+    <div style="display: flex; justify-content: space-around; margin-bottom: 20px;">
+        <div class="metric-card" style="width: 30%;">
+            <div class="metric-title">Nombre de matchs</div>
+            <div class="metric-value">{len(df)}</div>
+            <div class="metric-subtitle">matchs analysés</div>
+        </div>
+        <div class="metric-card" style="width: 30%;">
+            <div class="metric-title">Nombre de colonnes</div>
+            <div class="metric-value">{len(df.columns)}</div>
+            <div class="metric-subtitle">métriques disponibles</div>
+        </div>
+        <div class="metric-card" style="width: 30%;">
+            <div class="metric-title">Taux de victoire Blue</div>
+            <div class="metric-value">{df['blueWin'].mean()*100:.2f}%</div>
+            <div class="metric-subtitle">équilibre des côtés</div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Afficher les statistiques descriptives
+    st.subheader("Statistiques descriptives")
+    
+    # Sélectionner les colonnes numériques pour l'analyse
+    numeric_cols = df.select_dtypes(include=['int64', 'float64']).columns.tolist()
+    
+    # Créer un tableau de statistiques descriptives
+    desc_stats = df[numeric_cols].describe().T
+    desc_stats = desc_stats.reset_index()
+    desc_stats.columns = ['Métrique', 'Count', 'Mean', 'Std', 'Min', '25%', '50%', '75%', 'Max']
+    
+    # Formater les valeurs pour une meilleure lisibilité
+    for col in desc_stats.columns:
+        if col != 'Métrique':
+            desc_stats[col] = desc_stats[col].round(2)
+    
+    # Afficher le tableau avec un style amélioré
+    st.dataframe(desc_stats, use_container_width=True)
+    
+    # Ajouter une explication pour les statistiques
+    st.markdown("""
+    <div class="chart-explanation">
+        <p>Ce tableau présente les statistiques descriptives pour toutes les métriques numériques du dataset.
+        Vous pouvez observer les valeurs moyennes, médianes, minimales et maximales pour chaque métrique,
+        ainsi que leur dispersion (écart-type). Ces informations permettent de comprendre la distribution
+        des données et d'identifier les valeurs aberrantes potentielles.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("</div>", unsafe_allow_html=True)
+    
+    # Analyse des valeurs manquantes
+    st.markdown("""
+    <div class="chart-container">
+        <h3 style="text-align: center; margin-top: 0;">Analyse des valeurs manquantes</h3>
+    """, unsafe_allow_html=True)
+    
+    # Calculer le nombre de valeurs manquantes par colonne
+    missing_values = df.isnull().sum().reset_index()
+    missing_values.columns = ['Colonne', 'Valeurs manquantes']
+    missing_values['Pourcentage'] = (missing_values['Valeurs manquantes'] / len(df) * 100).round(2)
+    
+    # Filtrer pour n'afficher que les colonnes avec des valeurs manquantes
+    missing_values = missing_values[missing_values['Valeurs manquantes'] > 0]
+    
+    if len(missing_values) > 0:
+        st.dataframe(missing_values, use_container_width=True)
+    else:
+        st.success("Aucune valeur manquante détectée dans le dataset!")
+    
+    # Ajouter une explication pour les valeurs manquantes
+    st.markdown("""
+    <div class="chart-explanation">
+        <p>Cette section identifie les valeurs manquantes dans le dataset. Les valeurs manquantes peuvent
+        affecter la qualité des analyses et des modèles prédictifs. Si des valeurs manquantes sont présentes,
+        il est recommandé d'appliquer des techniques de traitement appropriées comme l'imputation ou la suppression
+        des lignes/colonnes concernées, selon le contexte et l'importance des données.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("</div>", unsafe_allow_html=True)
+    
+    # Distribution des variables clés
+    st.markdown("""
+    <div class="chart-container">
+        <h3 style="text-align: center; margin-top: 0;">Distribution des variables clés</h3>
+    """, unsafe_allow_html=True)
+    
+    # Sélectionner une variable à visualiser
+    key_vars = [
+        "blueTeamTotalKills", "blueTeamTotalGold", "blueTeamDragonKills", 
+        "blueTeamHeraldKills", "blueTeamTowersDestroyed", "goldDiff", "killDiff"
+    ]
+    
+    selected_var = st.selectbox(
+        "Sélectionner une variable à analyser", 
+        options=key_vars,
+        format_func=lambda x: {
+            "blueTeamTotalKills": "Kills totaux (Blue)",
+            "blueTeamTotalGold": "Or total (Blue)",
+            "blueTeamDragonKills": "Dragons tués (Blue)",
+            "blueTeamHeraldKills": "Hérauts tués (Blue)",
+            "blueTeamTowersDestroyed": "Tours détruites (Blue)",
+            "goldDiff": "Différence d'or",
+            "killDiff": "Différence de kills"
+        }.get(x, x)
+    )
+    
+    # Créer un histogramme pour la variable sélectionnée
+    fig = px.histogram(
+        df, 
+        x=selected_var,
+        color="blueWin",
+        color_discrete_map={0: '#C2185B', 1: '#0397AB'},
+        marginal="box",
+        opacity=0.7,
+        barmode="overlay",
+        labels={
+            selected_var: {
+                "blueTeamTotalKills": "Kills totaux (Blue)",
+                "blueTeamTotalGold": "Or total (Blue)",
+                "blueTeamDragonKills": "Dragons tués (Blue)",
+                "blueTeamHeraldKills": "Hérauts tués (Blue)",
+                "blueTeamTowersDestroyed": "Tours détruites (Blue)",
+                "goldDiff": "Différence d'or",
+                "killDiff": "Différence de kills"
+            }.get(selected_var, selected_var),
+            "blueWin": "Résultat",
+            "count": "Nombre de matchs"
+        },
+        title=f"Distribution de {selected_var}"
+    )
+    
+    fig.update_layout(
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        font=dict(color='#C8AA6E'),
+        xaxis=dict(gridcolor='#1E2328'),
+        yaxis=dict(gridcolor='#1E2328'),
+        height=500,
+        legend=dict(
+            title="Résultat",
+            orientation="h",
+            yanchor="bottom",
+            y=-0.2,
+            xanchor="center",
+            x=0.5
+        )
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
+    
+    # Ajouter une explication pour la distribution
+    st.markdown(f"""
+    <div class="chart-explanation">
+        <p>Cet histogramme montre la distribution de la variable "{selected_var}" segmentée par résultat de match.
+        La forme de la distribution révèle la répartition des valeurs et permet d'identifier les tendances centrales
+        et les valeurs extrêmes. La superposition des distributions pour les victoires (bleu) et les défaites (rouge)
+        permet de visualiser comment cette métrique influence le résultat du match. Le boxplot en marge fournit
+        un résumé statistique de la distribution, montrant la médiane, les quartiles et les valeurs aberrantes.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("</div>", unsafe_allow_html=True)
+    
+    # Corrélations entre toutes les variables
+    st.markdown("""
+    <div class="chart-container">
+        <h3 style="text-align: center; margin-top: 0;">Matrice de corrélation complète</h3>
+    """, unsafe_allow_html=True)
+    
+    # Sélectionner les colonnes numériques pour la corrélation
+    corr_cols = df.select_dtypes(include=['int64', 'float64']).columns.tolist()
+    
+    # Option pour filtrer le nombre de variables
+    show_all = st.checkbox("Afficher toutes les variables", value=False)
+    
+    if not show_all:
+        # Sélectionner les 10 variables les plus corrélées avec blueWin
+        if 'blueWin' in corr_cols:
+            corr_with_win = abs(df[corr_cols].corr()['blueWin']).sort_values(ascending=False)
+            top_corr_cols = corr_with_win.index[:10].tolist()
+            corr_matrix = df[top_corr_cols].corr()
+        else:
+            # Fallback si blueWin n'est pas disponible
+            corr_matrix = df[corr_cols[:10]].corr()
+    else:
+        corr_matrix = df[corr_cols].corr()
+    
+    # Créer la heatmap de corrélation
+    fig, ax = plt.subplots(figsize=(12, 10))
+    mask = np.triu(np.ones_like(corr_matrix, dtype=bool))
+    
+    sns.heatmap(
+        corr_matrix, 
+        mask=mask,
+        annot=True if len(corr_matrix) <= 15 else False,
+        cmap='coolwarm', 
+        center=0,
+        linewidths=.5,
+        fmt='.2f',
+        ax=ax
+    )
+    plt.title('Matrice de corrélation des variables', fontsize=16)
+    plt.tight_layout()
+    
+    # Personnaliser les couleurs pour le thème LoL
+    plt.rcParams['text.color'] = '#C8AA6E'
+    plt.rcParams['axes.labelcolor'] = '#C8AA6E'
+    plt.rcParams['xtick.color'] = '#C8AA6E'
+    plt.rcParams['ytick.color'] = '#C8AA6E'
+    
+    st.pyplot(fig)
+    
+    # Ajouter une explication pour la matrice de corrélation
+    st.markdown("""
+    <div class="chart-explanation">
+        <p>Cette matrice de corrélation visualise les relations entre toutes les variables numériques du dataset.
+        Les corrélations positives fortes (bleu foncé) indiquent des variables qui augmentent ensemble,
+        tandis que les corrélations négatives fortes (rouge foncé) montrent des variables qui évoluent en sens inverse.
+        Cette visualisation permet d'identifier les redondances dans les données et les variables qui pourraient
+        être combinées ou simplifiées. Elle aide également à comprendre les relations complexes entre différentes
+        métriques de jeu et leur influence collective sur le résultat des matchs.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("</div>", unsafe_allow_html=True)
+    
+    # Exploration des données brutes
+    st.markdown("""
+    <div class="chart-container">
+        <h3 style="text-align: center; margin-top: 0;">Exploration des données brutes</h3>
+    """, unsafe_allow_html=True)
+    
+    # Options pour filtrer et trier les données
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        sort_by = st.selectbox(
+            "Trier par", 
+            options=corr_cols,
+            format_func=lambda x: {
+                "blueTeamTotalKills": "Kills totaux (Blue)",
+                "blueTeamTotalGold": "Or total (Blue)",
+                "blueTeamDragonKills": "Dragons tués (Blue)",
+                "blueTeamHeraldKills": "Hérauts tués (Blue)",
+                "blueTeamTowersDestroyed": "Tours détruites (Blue)",
+                "goldDiff": "Différence d'or",
+                "killDiff": "Différence de kills",
+                "blueWin": "Résultat (victoire=1)"
+            }.get(x, x)
+        )
+    
+    with col2:
+        sort_order = st.radio("Ordre", ["Décroissant", "Croissant"], horizontal=True)
+    
+    # Filtrer par résultat
+    result_filter = st.multiselect(
+        "Filtrer par résultat", 
+        options=[0, 1], 
+        default=[0, 1],
+        format_func=lambda x: "Victoire" if x == 1 else "Défaite"
+    )
+    
+    # Appliquer les filtres et le tri
+    filtered_raw_data = df[df['blueWin'].isin(result_filter)]
+    
+    if sort_order == "Décroissant":
+        filtered_raw_data = filtered_raw_data.sort_values(by=sort_by, ascending=False)
+    else:
+        filtered_raw_data = filtered_raw_data.sort_values(by=sort_by, ascending=True)
+    
+    # Afficher les données brutes avec pagination
+    st.dataframe(filtered_raw_data, use_container_width=True)
+    
+    # Ajouter une explication pour l'exploration des données
+    st.markdown("""
+    <div class="chart-explanation">
+        <p>Cette section vous permet d'explorer directement les données brutes du dataset.
+        Vous pouvez trier les données selon n'importe quelle métrique et filtrer par résultat de match.
+        L'exploration des données brutes est utile pour identifier des cas particuliers, vérifier des hypothèses
+        spécifiques ou simplement mieux comprendre la structure et le contenu du dataset.
+        Examinez les matchs avec des valeurs extrêmes pour découvrir des insights intéressants sur les performances exceptionnelles.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("</div>", unsafe_allow_html=True)
+    
+    # Téléchargement des données
+    st.markdown("""
+    <div class="chart-container">
+        <h3 style="text-align: center; margin-top: 0;">Téléchargement des données</h3>
+    """, unsafe_allow_html=True)
+    
+    # Fonction pour convertir le dataframe en CSV
+    @st.cache_data
+    def convert_df_to_csv(df):
+        return df.to_csv(index=False).encode('utf-8')
+    
+    csv = convert_df_to_csv(filtered_raw_data)
+    
+    st.download_button(
+        label="Télécharger les données filtrées (CSV)",
+        data=csv,
+        file_name='lol_filtered_data.csv',
+        mime='text/csv',
+    )
+    
+    # Ajouter une explication pour le téléchargement
+    st.markdown("""
+    <div class="chart-explanation">
+        <p>Vous pouvez télécharger les données filtrées au format CSV pour une analyse plus approfondie
+        dans d'autres outils comme Excel, Python ou R. Les données téléchargées incluent tous les filtres
+        et tris que vous avez appliqués dans la section d'exploration ci-dessus.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
     st.markdown("</div>", unsafe_allow_html=True)
 # Pied de page
 st.markdown("""
