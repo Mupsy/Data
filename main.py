@@ -2477,10 +2477,6 @@ with tabs[6]:
         
         # Ajouter des marqueurs pour les événements
         for event in events:
-            if event['team'] == 'blue':
-                color = '#0397AB'
-            else:
-                color = '#C2185B'
             
             fig.add_trace(go.Scatter(
                 x=[event['time']],
