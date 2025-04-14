@@ -672,7 +672,8 @@ def generate_match_timeline(team_stats):
     # Ajouter des événements pour les dragons
     if team_stats['blueTeamDragonKills'] > 0:
         events.append({
-            'time': random.randint(5, 8),  > 0:
+            'time': random.randint(5, 8),
+        })
         events.append({
             'time': random.randint(5, 8),
             'event': f'Dragon tué par l\'équipe bleue',
