@@ -673,9 +673,6 @@ def generate_match_timeline(team_stats):
     if team_stats['blueTeamDragonKills'] > 0:
         events.append({
             'time': random.randint(5, 8),
-        })
-        events.append({
-            'time': random.randint(5, 8),
             'event': f'Dragon tué par l\'équipe bleue',
             'team': 'blue'
         })
@@ -880,7 +877,7 @@ tabs = st.tabs([
     "🧠 Prédictions IA", 
     "💬 Assistant LoL",
     "🌍 Carte de la Jungle",
-    "⏱️ Timeline de Match",
+    "⏱️ Timeline de Match"
 ])
 
 # Onglet 1: Vue d'ensemble
@@ -2477,6 +2474,10 @@ with tabs[6]:
         
         # Ajouter des marqueurs pour les événements
         for event in events:
+            if event['team'] == 'blue':
+                color = '#0397AB'
+            else:
+                color = '#C2185B'
             
             fig.add_trace(go.Scatter(
                 x=[event['time']],
