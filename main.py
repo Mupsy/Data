@@ -552,6 +552,16 @@ st.markdown("""
         border-bottom: 3px solid transparent;
         border-top: 3px solid #005A82;
     }
+    
+    /* Style pour les explications de graphiques */
+    .chart-explanation {
+        background: linear-gradient(135deg, rgba(9, 20, 40, 0.9), rgba(10, 20, 40, 0.8));
+        padding: 15px;
+        border-radius: 10px;
+        margin-top: 10px;
+        border-left: 3px solid #0397AB;
+        color: #E8D8A3;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -661,6 +671,8 @@ def generate_match_timeline(team_stats):
     
     # Ajouter des événements pour les dragons
     if team_stats['blueTeamDragonKills'] > 0:
+        events.append({
+            'time': random.randint(5, 8),  > 0:
         events.append({
             'time': random.randint(5, 8),
             'event': f'Dragon tué par l\'équipe bleue',
@@ -958,6 +970,17 @@ with tabs[0]:
         )
         
         st.plotly_chart(fig, use_container_width=True)
+        
+        # Ajout d'une explication pour le graphique
+        st.markdown("""
+        <div class="chart-explanation">
+            <p>Ce graphique présente le nombre total de kills réalisés par chaque équipe sur l'ensemble des matchs analysés. 
+            La différence entre les équipes bleue et rouge peut indiquer des avantages spécifiques liés au côté de la carte ou 
+            des préférences méta qui favorisent un style de jeu particulier. Un nombre de kills plus élevé est souvent corrélé 
+            à un gameplay plus agressif et à une domination dans les phases d'escarmouches.</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
         st.markdown("</div>", unsafe_allow_html=True)
     
     # Utilisation de value_counts() - Distribution du premier sang
@@ -1002,6 +1025,17 @@ with tabs[0]:
         )
         
         st.plotly_chart(fig, use_container_width=True)
+        
+        # Ajout d'une explication pour le graphique
+        st.markdown("""
+        <div class="chart-explanation">
+            <p>Ce diagramme circulaire illustre la distribution du Premier Sang entre les équipes. 
+            Le Premier Sang est un avantage crucial en début de partie qui définit souvent la dominance de lane. 
+            Les équipes qui obtiennent le Premier Sang gagnent généralement un avantage psychologique et un lead d'or 
+            précoce qui peut être exploité pour contrôler les objectifs et exercer une pression sur la carte.</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
         st.markdown("</div>", unsafe_allow_html=True)
     
     # Distribution des victoires par différence d'or
@@ -1043,6 +1077,18 @@ with tabs[0]:
     )
     
     st.plotly_chart(fig, use_container_width=True)
+    
+    # Ajout d'une explication pour le graphique
+    st.markdown("""
+    <div class="chart-explanation">
+        <p>Ce graphique démontre comment la différence d'or impacte directement les taux de victoire. 
+        Observez comment la probabilité de victoire augmente considérablement avec des différences d'or positives, 
+        particulièrement au-delà du seuil de 2000 or. Les avantages en or se traduisent par des avantages d'items, 
+        qui fournissent une puissance de combat tangible dans les combats d'équipe et les escarmouches. 
+        Cette analyse confirme l'importance cruciale du farm et des objectifs qui génèrent de l'or.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
     st.markdown("</div>", unsafe_allow_html=True)
     
     # Comparaison des métriques clés entre équipes gagnantes et perdantes
@@ -1105,6 +1151,18 @@ with tabs[0]:
     )
     
     st.plotly_chart(fig, use_container_width=True)
+    
+    # Ajout d'une explication pour le graphique
+    st.markdown("""
+    <div class="chart-explanation">
+        <p>Ce boxplot compare la métrique sélectionnée entre les équipes gagnantes et perdantes. 
+        La séparation claire entre les boîtes indique à quel point cette métrique est fortement corrélée aux résultats des matchs. 
+        Les équipes victorieuses surpassent systématiquement les équipes perdantes dans ce domaine, ce qui en fait un prédicteur 
+        fiable des résultats de match. Analysez les différentes métriques pour identifier les facteurs les plus déterminants 
+        pour la victoire dans vos propres parties.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
     st.markdown("</div>", unsafe_allow_html=True)
     
     # Heatmap des corrélations
@@ -1143,6 +1201,19 @@ with tabs[0]:
     plt.rcParams['ytick.color'] = '#C8AA6E'
     
     st.pyplot(fig)
+    
+    # Ajout d'une explication pour le graphique
+    st.markdown("""
+    <div class="chart-explanation">
+        <p>La matrice de corrélation révèle les relations entre les différentes métriques de jeu. 
+        Les corrélations positives fortes (bleu foncé) indiquent des métriques qui tendent à augmenter ensemble, 
+        tandis que les corrélations négatives (rouge) montrent des relations inverses. 
+        Portez une attention particulière aux corrélations avec 'blueWin' pour identifier les prédicteurs de victoire. 
+        Cette visualisation permet de comprendre quelles métriques sont interdépendantes et lesquelles ont le plus 
+        d'impact sur le résultat final du match.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
     st.markdown("</div>", unsafe_allow_html=True)
 
 # Onglet 2: Analyse détaillée
@@ -1260,6 +1331,18 @@ with tabs[1]:
     )
     
     st.plotly_chart(fig, use_container_width=True)
+    
+    # Ajout d'une explication pour le graphique
+    st.markdown("""
+    <div class="chart-explanation">
+        <p>Ce nuage de points visualise la relation entre deux métriques clés, avec les points colorés selon le résultat du match.
+        Le motif de regroupement montre comment ces métriques interagissent pour influencer les résultats de jeu.
+        La taille des points représente le score d'objectifs, mettant en évidence comment les équipes qui sécurisent les objectifs
+        tendent à performer dans ces métriques. Observez les zones de concentration des points bleus (victoires) pour identifier
+        les seuils critiques de performance dans ces métriques.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
     st.markdown("</div>", unsafe_allow_html=True)
     
     # Comparaison Blue vs Red
@@ -1336,6 +1419,17 @@ with tabs[1]:
     fig.update_traces(texttemplate='%{text:.2f}', textposition='outside')
     
     st.plotly_chart(fig, use_container_width=True)
+    
+    # Ajout d'une explication pour le graphique
+    st.markdown("""
+    <div class="chart-explanation">
+        <p>Cette comparaison met en évidence la différence de performance moyenne entre les côtés Bleu et Rouge pour la métrique sélectionnée.
+        Les avantages spécifiques à chaque côté peuvent émerger de l'asymétrie de la carte, du positionnement des objectifs et de l'ordre de draft.
+        Comprendre ces différences peut vous aider à ajuster votre stratégie en fonction du côté qui vous est assigné.
+        Par exemple, le côté bleu peut avoir un accès plus facile à certains objectifs, tandis que le côté rouge peut avoir d'autres avantages stratégiques.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
     st.markdown("</div>", unsafe_allow_html=True)
     
     # Analyse des métriques dérivées (killsPerGold)
@@ -1382,6 +1476,18 @@ with tabs[1]:
     )
     
     st.plotly_chart(fig, use_container_width=True)
+    
+    # Ajout d'une explication pour le graphique
+    st.markdown("""
+    <div class="chart-explanation">
+        <p>Ce graphique analyse l'efficacité des kills - comment les équipes convertissent efficacement les kills en avantage d'or.
+        Une efficacité plus élevée (plus de kills par 1000 or) suggère des équipes qui excellent à sécuriser des kills sans investir
+        des ressources excessives. Une efficacité plus faible pourrait indiquer des équipes qui privilégient les objectifs et le farm
+        plutôt que les éliminations de champions. Notez la relation entre cette métrique et le taux de victoire pour comprendre
+        si une approche orientée vers les kills ou vers les objectifs est plus efficace dans la méta actuelle.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
     st.markdown("</div>", unsafe_allow_html=True)
     
     # Tableau des statistiques détaillées
@@ -1418,6 +1524,17 @@ with tabs[1]:
     stats_df['Résultat'] = stats_df['Résultat'].map({0: 'Défaite', 1: 'Victoire'})
     
     st.dataframe(stats_df, use_container_width=True)
+    
+    # Ajout d'une explication pour le tableau
+    st.markdown("""
+    <div class="chart-explanation">
+        <p>Ce tableau présente les valeurs moyennes des métriques clés, segmentées par résultat de match.
+        Les différences entre les matchs gagnés et perdus révèlent les écarts de performance critiques qui déterminent l'issue d'une partie.
+        Utilisez ces données pour identifier les seuils de performance à atteindre dans vos propres parties.
+        Par exemple, observez l'écart d'or moyen entre victoire et défaite pour comprendre quel avantage économique est généralement nécessaire pour l'emporter.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
     st.markdown("</div>", unsafe_allow_html=True)
 
 # Onglet 3: Objectifs
@@ -1467,6 +1584,17 @@ with tabs[2]:
     fig.update_traces(texttemplate='%{text:.2f}%', textposition='outside')
     
     st.plotly_chart(fig, use_container_width=True)
+    
+    # Ajout d'une explication pour le graphique
+    st.markdown("""
+    <div class="chart-explanation">
+        <p>Cette visualisation quantifie l'impact de l'obtention du Premier Sang sur le taux de victoire de l'équipe bleue.
+        La différence marquée dans les taux de victoire démontre le potentiel d'effet boule de neige des avantages précoces.
+        Le Premier Sang fournit à la fois un avantage d'or direct et indique souvent une exécution supérieure en début de partie.
+        Cet avantage initial peut être exploité pour établir une domination de vision, contrôler les objectifs et exercer une pression sur les lanes.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
     st.markdown("</div>", unsafe_allow_html=True)
     
     # Impact des dragons
@@ -1502,6 +1630,18 @@ with tabs[2]:
     )
     
     st.plotly_chart(fig, use_container_width=True)
+    
+    # Ajout d'une explication pour le graphique
+    st.markdown("""
+    <div class="chart-explanation">
+        <p>Ce graphique montre comment le contrôle des dragons est corrélé à la victoire.
+        Chaque dragon supplémentaire sécurisé augmente significativement la probabilité de victoire, avec des rendements décroissants après 3-4 dragons.
+        Les buffs de dragon fournissent des avantages cumulatifs qui deviennent de plus en plus difficiles à surmonter pour les adversaires.
+        Le contrôle des dragons est non seulement bénéfique pour les buffs eux-mêmes, mais indique également une équipe qui domine la partie inférieure de la carte
+        et coordonne efficacement ses mouvements autour des objectifs.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
     st.markdown("</div>", unsafe_allow_html=True)
     
     # Impact des hérauts
@@ -1537,6 +1677,18 @@ with tabs[2]:
     )
     
     st.plotly_chart(fig, use_container_width=True)
+    
+    # Ajout d'une explication pour le graphique
+    st.markdown("""
+    <div class="chart-explanation">
+        <p>Cette analyse démontre l'influence du Héraut sur les résultats des matchs.
+        Le contrôle du Héraut permet aux équipes d'ouvrir rapidement la carte, d'accélérer les revenus d'or grâce aux plaques de tourelles
+        et de créer une pression sur la carte. L'augmentation du taux de victoire reflète à la fois l'avantage direct du Héraut
+        et la coordination d'équipe nécessaire pour le sécuriser. Utiliser efficacement le Héraut peut créer un avantage significatif
+        en milieu de partie, particulièrement lorsqu'il est synchronisé avec d'autres objectifs comme le dragon.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
     st.markdown("</div>", unsafe_allow_html=True)
     
     # Impact des tours
@@ -1572,6 +1724,18 @@ with tabs[2]:
     )
     
     st.plotly_chart(fig, use_container_width=True)
+    
+    # Ajout d'une explication pour le graphique
+    st.markdown("""
+    <div class="chart-explanation">
+        <p>La relation entre les tours détruites et la probabilité de victoire est clairement illustrée ici.
+        Chaque tour fournit de l'or global, ouvre la carte pour un contrôle de vision plus profond et restreint les mouvements ennemis.
+        L'augmentation progressive du taux de victoire montre comment chaque tour supplémentaire amplifie les avantages.
+        La destruction des tours extérieures permet d'accéder à la jungle ennemie et aux objectifs, tandis que les tours intérieures
+        ouvrent la voie vers les inhibiteurs et le Nexus. Cette progression territoriale est fondamentale pour convertir un avantage en victoire.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
     st.markdown("</div>", unsafe_allow_html=True)
     
     # Score d'objectifs combiné
@@ -1616,6 +1780,17 @@ with tabs[2]:
     )
     
     st.plotly_chart(fig, use_container_width=True)
+    
+    # Ajout d'une explication pour le graphique
+    st.markdown("""
+    <div class="chart-explanation">
+        <p>Ce graphique combine tous les objectifs en un score unique pour montrer leur impact cumulatif.
+        Des scores d'objectifs plus élevés sont fortement corrélés à la victoire, démontrant que les équipes qui privilégient
+        le contrôle de la carte par la prise systématique d'objectifs surpassent constamment les équipes focalisées sur les kills.
+        Cette métrique composite révèle l'importance d'une approche équilibrée du jeu, où la prise d'objectifs, le contrôle de vision et les éliminations de champions sont coordonnés pour maximiser l'avantage global. Les équipes qui excellent dans cette coordination ont généralement des taux de victoire nettement supérieurs.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
     st.markdown("</div>", unsafe_allow_html=True)
     
     # Comparaison de l'impact des différents objectifs
@@ -1660,6 +1835,18 @@ with tabs[2]:
     fig.update_traces(texttemplate='%{text:.2f}%', textposition='outside')
     
     st.plotly_chart(fig, use_container_width=True)
+    
+    # Ajout d'une explication pour le graphique
+    st.markdown("""
+    <div class="chart-explanation">
+        <p>Cette comparaison révèle l'impact relatif des différents objectifs sur le taux de victoire.
+        Comprendre quels objectifs fournissent le plus grand avantage aide les équipes à prioriser efficacement leurs ressources.
+        Notez comment certains objectifs peuvent avoir une importance disproportionnée par rapport à leur valeur apparente en jeu.
+        Cette analyse permet d'optimiser la prise de décision stratégique, en identifiant les moments clés où il faut contester
+        certains objectifs ou les échanger contre d'autres avantages sur la carte.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
     st.markdown("</div>", unsafe_allow_html=True)
 
 # Onglet 4: Prédictions IA
@@ -1765,6 +1952,18 @@ with tabs[3]:
     fig.update_traces(texttemplate='%{text:.3f}', textposition='outside')
     
     st.plotly_chart(fig, use_container_width=True)
+    
+    # Ajout d'une explication pour le graphique
+    st.markdown("""
+    <div class="chart-explanation">
+        <p>Ce graphique classe les facteurs selon leur pouvoir prédictif pour les résultats des matchs.
+        Les caractéristiques avec une importance plus élevée ont une plus grande influence sur les prédictions du modèle d'apprentissage automatique.
+        Ces insights révèlent quels aspects du gameplay déterminent le plus fiablement la victoire, au-delà de la sagesse conventionnelle.
+        Utilisez ces informations pour concentrer vos efforts sur les métriques qui ont le plus d'impact sur le résultat final,
+        et pour comprendre quels aspects du jeu méritent le plus d'attention lors de l'analyse de vos propres performances.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
     st.markdown("</div>", unsafe_allow_html=True)
     
     # Simulateur de prédiction
@@ -1871,6 +2070,19 @@ with tabs[3]:
         font=dict(color='#C8AA6E')
     )
     st.plotly_chart(fig, use_container_width=True)
+    
+    # Ajout d'une explication pour le simulateur
+    st.markdown("""
+    <div class="chart-explanation">
+        <p>La jauge de prédiction visualise la probabilité de victoire estimée en fonction de l'état actuel du jeu.
+        Cette évaluation en temps réel combine plusieurs facteurs pondérés par leur importance prédictive.
+        Les équipes peuvent utiliser cet outil pour comprendre leur position actuelle et identifier quelles métriques
+        nécessitent une amélioration. Expérimentez avec différentes valeurs pour voir comment des changements dans
+        certaines métriques peuvent affecter dramatiquement les chances de victoire, et utilisez ces informations
+        pour prioriser vos objectifs en jeu.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
     st.markdown("</div>", unsafe_allow_html=True)
     
     # Matrice de confusion
@@ -1903,6 +2115,18 @@ with tabs[3]:
     plt.rcParams['ytick.color'] = '#C8AA6E'
     
     st.pyplot(fig)
+    
+    # Ajout d'une explication pour la matrice de confusion
+    st.markdown("""
+    <div class="chart-explanation">
+        <p>La matrice de confusion évalue la précision du modèle de prédiction en comparant les résultats prédits avec les résultats réels.
+        Les vrais positifs et vrais négatifs (diagonale) représentent les prédictions correctes, tandis que les valeurs hors diagonale montrent les erreurs.
+        Cette visualisation aide à évaluer la fiabilité des prédictions du modèle dans différents scénarios de jeu.
+        Un modèle équilibré devrait avoir une bonne précision tant pour les prédictions de victoire que de défaite,
+        indiquant qu'il capture efficacement les facteurs déterminants dans les deux cas.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
     st.markdown("</div>", unsafe_allow_html=True)
 
 # Onglet 5: Assistant LoL
@@ -1974,6 +2198,16 @@ with tabs[4]:
                     height=500
                 )
                 st.plotly_chart(fig, use_container_width=True)
+                
+                # Ajout d'une explication pour le graphique
+                st.markdown("""
+                <div class="chart-explanation">
+                    <p>Ce graphique présente les six facteurs les plus déterminants pour la victoire selon notre modèle d'apprentissage automatique.
+                    L'importance de chaque facteur est calculée en fonction de son pouvoir prédictif dans le modèle.
+                    Concentrez votre attention sur ces métriques clés pour maximiser vos chances de victoire.
+                    Notez que certains facteurs peuvent avoir une importance surprenante par rapport aux idées reçues sur le jeu.</p>
+                </div>
+                """, unsafe_allow_html=True)
             
             elif "objectifs" in user_question.lower() or "dragon" in user_question.lower() or "héraut" in user_question.lower():
                 # Afficher l'impact des objectifs
@@ -2008,6 +2242,16 @@ with tabs[4]:
                     height=500
                 )
                 st.plotly_chart(fig, use_container_width=True)
+                
+                # Ajout d'une explication pour le graphique
+                st.markdown("""
+                <div class="chart-explanation">
+                    <p>Ce graphique quantifie l'impact de chaque objectif majeur sur le taux de victoire.
+                    La valeur représente la différence de taux de victoire entre les équipes qui obtiennent l'objectif et celles qui ne l'obtiennent pas.
+                    Ces données permettent de prioriser les objectifs en fonction de leur impact réel sur l'issue du match.
+                    Utilisez ces informations pour optimiser vos rotations et votre prise de décision autour des objectifs.</p>
+                </div>
+                """, unsafe_allow_html=True)
             
             elif "meta" in user_question.lower() or "tendance" in user_question.lower():
                 # Afficher les métriques clés
@@ -2036,6 +2280,16 @@ with tabs[4]:
                     height=500
                 )
                 st.plotly_chart(fig, use_container_width=True)
+                
+                # Ajout d'une explication pour le graphique
+                st.markdown("""
+                <div class="chart-explanation">
+                    <p>Ce graphique illustre les tendances actuelles de la méta en montrant la relation entre l'or total, les kills et le score d'objectifs.
+                    Les points bleus représentent les victoires, tandis que les points rouges représentent les défaites.
+                    La taille des points indique le score d'objectifs, révélant comment les équipes qui dominent les objectifs tendent à accumuler plus d'or et de kills.
+                    Cette visualisation aide à comprendre l'équilibre actuel entre les différentes stratégies de jeu et leur efficacité.</p>
+                </div>
+                """, unsafe_allow_html=True)
             
             else:
                 # Afficher une visualisation générique
@@ -2062,6 +2316,17 @@ with tabs[4]:
                     height=500
                 )
                 st.plotly_chart(fig, use_container_width=True)
+                
+                # Ajout d'une explication pour le graphique
+                st.markdown("""
+                <div class="chart-explanation">
+                    <p>Ce graphique montre la relation entre la différence d'or et la différence de kills, colorée par le résultat du match.
+                    On observe une forte corrélation entre ces deux métriques, mais également des cas où une équipe peut gagner malgré un déficit dans l'une ou l'autre.
+                    Les points bleus (victoires) tendent à se concentrer dans le quadrant supérieur droit, indiquant qu'une avance dans ces deux métriques
+                    augmente considérablement les chances de victoire. Cependant, notez les exceptions qui révèlent l'importance d'autres facteurs comme
+                    le timing des objectifs et les décisions stratégiques.</p>
+                </div>
+                """, unsafe_allow_html=True)
     
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -2139,17 +2404,15 @@ with tabs[5]:
         
         st.pyplot(fig)
         
-        # Ajouter une analyse de la carte
+        # Ajout d'une explication pour la carte
         st.markdown(f"""
-        <div style="background: linear-gradient(135deg, rgba(9, 20, 40, 0.9), rgba(10, 20, 40, 0.8)); padding: 20px; border-radius: 10px; margin-top: 20px; border-left: 5px solid #0397AB;">
-            <h4 style="color: #C8AA6E; margin-top: 0;">Analyse de la carte de la jungle</h4>
-            <p style="color: #E8D8A3;">
-                Cette carte montre les points chauds d'activité dans la jungle pour ce match. 
-                L'équipe bleue a {"sécurisé" if selected_match['blueTeamDragonKills'] > 0 else "manqué"} le contrôle du dragon et 
-                {"obtenu" if selected_match['blueTeamHeraldKills'] > 0 else "perdu"} le héraut.
-                Les zones les plus actives sont généralement autour des objectifs majeurs et des entrées de jungle.
-                {"L'équipe bleue a maintenu un bon contrôle de la jungle, ce qui a contribué à sa victoire." if selected_match['blueWin'] == 1 else "L'équipe bleue n'a pas réussi à maintenir un contrôle suffisant de la jungle, ce qui a contribué à sa défaite."}
-            </p>
+        <div class="chart-explanation">
+            <p>Cette carte de chaleur visualise les points chauds d'activité dans la jungle pour ce match.
+            Les zones plus intenses (rouge-orange) indiquent une plus grande activité, généralement autour des objectifs majeurs
+            comme le dragon ({selected_match['blueTeamDragonKills']} tué(s) par l'équipe bleue) et le héraut ({selected_match['blueTeamHeraldKills']} tué(s)).
+            L'équipe bleue a {"sécurisé" if selected_match['blueTeamDragonKills'] > 0 else "manqué"} le contrôle du dragon et 
+            {"obtenu" if selected_match['blueTeamHeraldKills'] > 0 else "perdu"} le héraut.
+            Les zones les plus actives révèlent les chemins de gank préférés et les points de contestation fréquents.</p>
         </div>
         """, unsafe_allow_html=True)
     else:
@@ -2246,6 +2509,17 @@ with tabs[6]:
         
         st.plotly_chart(fig, use_container_width=True)
         
+        # Ajout d'une explication pour le graphique
+        st.markdown("""
+        <div class="chart-explanation">
+            <p>Cette timeline visualise la progression de l'or et les événements clés des 10 premières minutes du match.
+            La courbe d'or montre comment l'économie de l'équipe se développe, tandis que les étoiles marquent les moments décisifs.
+            Les événements en bleu sont favorables à l'équipe bleue, tandis que ceux en rouge sont favorables à l'équipe rouge.
+            Observez comment chaque événement majeur (Premier Sang, Dragon, Héraut) influence la trajectoire de l'or et crée
+            des opportunités pour étendre l'avantage ou revenir dans le match.</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
         # Afficher la timeline sous forme de liste
         st.subheader("Événements clés")
         
@@ -2272,14 +2546,12 @@ with tabs[6]:
         
         # Ajouter une analyse de la timeline
         st.markdown(f"""
-        <div style="background: linear-gradient(135deg, rgba(9, 20, 40, 0.9), rgba(10, 20, 40, 0.8)); padding: 20px; border-radius: 10px; margin-top: 20px; border-left: 5px solid #0397AB;">
-            <h4 style="color: #C8AA6E; margin-top: 0;">Analyse de la timeline</h4>
-            <p style="color: #E8D8A3;">
-                Cette timeline montre les événements clés des 10 premières minutes du match. 
-                {"L'équipe bleue a pris l'avantage tôt avec le premier sang, ce qui a créé un momentum favorable." if selected_match['blueTeamFirstBlood'] == 1 else "L'équipe rouge a pris l'avantage tôt avec le premier sang, créant une pression sur l'équipe bleue."}
-                {"Le contrôle des objectifs précoces comme le dragon et le héraut a permis à l'équipe bleue de maintenir son avantage." if selected_match['blueTeamDragonKills'] > 0 or selected_match['blueTeamHeraldKills'] > 0 else "L'équipe bleue n'a pas réussi à sécuriser les objectifs précoces, ce qui a permis à l'équipe rouge de rester dans le match."}
-                {"Au final, l'équipe bleue a réussi à convertir son avantage en victoire." if selected_match['blueWin'] == 1 else "Malgré les efforts, l'équipe bleue n'a pas réussi à convertir ses avantages en victoire."}
-            </p>
+        <div class="chart-explanation">
+            <p>Cette chronologie détaille les moments clés du match et leur impact sur le déroulement de la partie.
+            {"L'équipe bleue a pris l'avantage tôt avec le premier sang, ce qui a créé un momentum favorable." if selected_match['blueTeamFirstBlood'] == 1 else "L'équipe rouge a pris l'avantage tôt avec le premier sang, créant une pression sur l'équipe bleue."}
+            {"Le contrôle des objectifs précoces comme le dragon et le héraut a permis à l'équipe bleue de maintenir son avantage." if selected_match['blueTeamDragonKills'] > 0 or selected_match['blueTeamHeraldKills'] > 0 else "L'équipe bleue n'a pas réussi à sécuriser les objectifs précoces, ce qui a permis à l'équipe rouge de rester dans le match."}
+            {"Au final, l'équipe bleue a réussi à convertir son avantage en victoire." if selected_match['blueWin'] == 1 else "Malgré les efforts, l'équipe bleue n'a pas réussi à convertir ses avantages en victoire."}
+            Les moments critiques identifiés ici sont typiques des points de bascule dans les matchs de haut niveau.</p>
         </div>
         """, unsafe_allow_html=True)
     else:
